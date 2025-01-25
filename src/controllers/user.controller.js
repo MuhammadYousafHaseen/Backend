@@ -2,7 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
 import { upladOnCloudinary } from "../utils/cloudinary.js";
-import { ApiResponse } from F"../utils/ApiResponse.js"
+import { ApiResponse } from "../utils/ApiResponse.js"
 
 const registerUser = asyncHandler( async(req, res) => {
    //get user details from frontend but we will use postman
@@ -28,8 +28,12 @@ const existedUser= await User.findOne({
  if(existedUser){
     throw new ApiError(409, "Username or email already exists");
  }
- const avatarLocalPath = req.files?.avatar[0]?.path;
- const coverImageLocalPath = req.files?.coverImage[0]?.path;
+ const avatarLocalPath = req.files.avatar[0].path;
+ //const coverImageLocalPath = req.files.coverImage[0].path;
+ let coverImageLocalPath;
+ if (req.files && Array.isArray(req.files.coverImage && req.files.coverImage.length > 0)) {
+    coverImageLocalPath = req.files.coverImage[0].path;
+   }
 
  if(!avatarLocalPath || !coverImageLocalPath){
     throw new ApiError(400, "Please upload avatar and cover image");
@@ -42,10 +46,10 @@ const existedUser= await User.findOne({
  const user = await User.create({
     fullname,
     avatar: avatar.url,
-    coverImage: coverImage?.url || "",
+    coverImage: coverImage.url,
     email,
     password,
-    username: username.lowercase() 
+    username: username.toLowerCase() 
 
  })
 

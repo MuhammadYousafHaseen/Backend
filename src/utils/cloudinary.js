@@ -20,7 +20,8 @@ const upladOnCloudinary = async (localFilePath) => {
             resource_type: "auto"
         })
         //files has been uploaded successfully
-        console.log("File has been uploaded successfully" , response.url);
+        // console.log("File has been uploaded successfully" , response);
+        fs.unlinkSync(localFilePath);
         return response; // return response.url;
     } catch (error) {
         fs.unlinkSync(localFilePath); // delete file from local storage if any error
