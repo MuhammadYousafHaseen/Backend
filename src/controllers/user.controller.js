@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js";
 import { upladOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
+
 const generateAccessTokenandRefreshToken = async userId => {
   try {
     const user = await User.findById(userId);
@@ -64,6 +65,7 @@ const registerUser = asyncHandler(async (req, res) => {
       password,
       username: username.toLowerCase(),
     });
+  
 
     const createdUser = await User.findById(user._id).select("-password -refreshToken");
 
@@ -285,9 +287,12 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
          if (!updatedUser) {
            throw new ApiError(500, "Error updating avatar");
          }
+
+   
          return res.status(200).json(new ApiResponse(200, updatedUser, "Avatar updated successfully"));
    } catch (error) {
       throw new ApiError(500, "Error updating avatar");
+}
 });
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
@@ -318,7 +323,8 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
            return res.status(200).json(new ApiResponse(200, updatedUser, "Cover Image updated successfully"));
      } catch (error) {
         throw new ApiError(500, "Error updating Cover Image");
-  });
+  }
+});
 
 export {
   registerUser,
