@@ -7,8 +7,10 @@ import jwt from "jsonwebtoken";
 import { deleteImageFromCloudinary } from "../utils/deleteCloudinary.js";
 import mongoose from "mongoose";
 
+
 const generateAccessTokenandRefreshToken = async userId => {
   try {
+    // 根据用户ID查找用户
     const user = await User.findById(userId);
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
