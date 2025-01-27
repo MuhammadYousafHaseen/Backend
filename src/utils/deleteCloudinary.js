@@ -12,26 +12,26 @@ cloudinary.config({
  * @param {string} imageUrl - The full URL of the image to be deleted.
  * @returns {Promise<Object>} - The response from Cloudinary.
  */
-const deleteImageFromCloudinary = async (imageUrl) => {
+const deleteImageFromCloudinary = async imageUrl => {
   try {
     if (!imageUrl) {
-      throw new Error('Image URL is required.');
+      throw new Error("Image URL is required.");
     }
 
     // Extract the public_id from the URL
-    const urlParts = imageUrl.split('/');
+    const urlParts = imageUrl.split("/");
     const publicIdWithExtension = urlParts[urlParts.length - 1]; // Get the last part (e.g., "filename.jpg")
-    const publicId = publicIdWithExtension.split('.')[0]; // Remove the extension (e.g., "filename")
+    const publicId = publicIdWithExtension.split(".")[0]; // Remove the extension (e.g., "filename")
 
     // Delete the image using Cloudinary's destroy method
     const result = await cloudinary.uploader.destroy(publicId);
 
-    console.log('Image deleted successfully:', result);
+    console.log("Image deleted successfully:", result);
     return result;
   } catch (error) {
-    console.error('Error deleting image from Cloudinary:', error);
+    console.error("Error deleting image from Cloudinary:", error);
     throw error;
   }
 };
 
-export {deleteImageFromCloudinary};
+export { deleteImageFromCloudinary };

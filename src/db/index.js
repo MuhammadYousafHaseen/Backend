@@ -11,10 +11,7 @@ const connectDB = async () => {
   }
 };
 
-
 export default connectDB;
-
-
 
 // const connectDB = async () => {
 //     try {
@@ -29,7 +26,3 @@ export default connectDB;
 //       process.exit(1);
 //     }
 //   };
-
-
-
-
