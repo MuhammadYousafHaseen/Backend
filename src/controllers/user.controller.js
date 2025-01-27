@@ -5,6 +5,7 @@ import { upladOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import { deleteImageFromCloudinary } from "../utils/deleteCloudinary.js";
+import mongoose from "mongoose";
 
 const generateAccessTokenandRefreshToken = async userId => {
   try {
@@ -53,15 +54,15 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!avatarLocalPath || !coverImageLocalPath) {
       throw new ApiError(400, "Please upload avatar and cover image");
     }
-    var avatar1 = await upladOnCloudinary(avatarLocalPath);
-    var coverImage1 = await upladOnCloudinary(coverImageLocalPath);
-    if (!avatar1 || !coverImage1) {
+    const avatar = await upladOnCloudinary(avatarLocalPath);
+    const coverImage = await upladOnCloudinary(coverImageLocalPath);
+    if (!avatar || !coverImage) {
       throw new ApiError(500, "Error uploading images");
     }
     const user = await User.create({
       fullname,
-      avatar: avatar1.url,
-      coverImage: coverImage1.url,
+      avatar: avatar.url,
+      coverImage: coverImage.url,
       email,
       password,
       username: username.toLowerCase(),
@@ -138,8 +139,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
       req.user._id,
       {
-        $set: {
-          refreshToken: undefined,
+        $unset: {
+          refreshToken: 1,// this removes the field from the document
         },
       },
       {
@@ -289,7 +290,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Error updating avatar");
     }
 
-    await deleteImageFromCloudinary(avatar1.url);
+    await deleteImageFromCloudinary(req.user?.avatar);
 
     return res.status(200).json(new ApiResponse(200, updatedUser, "Avatar updated successfully"));
   } catch (error) {
@@ -324,7 +325,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Error updating Cover Image");
     }
 
-    // await deleteImageFromCloudinary(coverImage1.url);
+    await deleteImageFromCloudinary(req.user?.coverImage);
 
     return res.status(200).json(new ApiResponse(200, updatedUser, "Cover Image updated successfully"));
   } catch (error) {
