@@ -88,7 +88,7 @@ const loginUser = asyncHandler(async (req, res) => {
   //compare password
   // access and refresh token sending
   //send response to frontend and send cookies
-  try {
+  
     const { username, password, email } = req.body;
     if (!username && !email) {
       throw new ApiError(400, "Please provide username and email");
@@ -131,9 +131,7 @@ const loginUser = asyncHandler(async (req, res) => {
           "User logged in successfully",
         ),
       );
-  } catch (error) {
-    throw new ApiError(500, "Error logging in user");
-  }
+  
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
